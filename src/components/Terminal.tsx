@@ -13,9 +13,35 @@ export default function Terminal() {
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [suggestion, setSuggestion] = useState("");
+  const [focusRequest, setFocusRequest] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const transcriptRef = useRef<HTMLDivElement>(null);
   const pendingInput = useRef("");
+
+  useEffect(() => {
+    const open = () => {
+      setExpanded(true);
+      setFocusRequest((previous) => previous + 1);
+      const motion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document.getElementById("terminal-window")?.scrollIntoView({ behavior: motion ? "instant" : "smooth", block: "center" });
+    };
+    const shortcut = (event: globalThis.KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.code === "Backquote") {
+        event.preventDefault();
+        open();
+      }
+    };
+    window.addEventListener("portfolio:open-terminal", open);
+    window.addEventListener("keydown", shortcut);
+    return () => {
+      window.removeEventListener("portfolio:open-terminal", open);
+      window.removeEventListener("keydown", shortcut);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (focusRequest) inputRef.current?.focus({ preventScroll: true });
+  }, [focusRequest]);
 
   useEffect(() => {
     const element = transcriptRef.current;
@@ -66,7 +92,7 @@ export default function Terminal() {
   }
 
   return (
-    <div className={`terminal ${expanded ? "terminal-expanded" : ""}`}>
+    <div id="terminal-window" className={`terminal ${expanded ? "terminal-expanded" : ""}`}>
       <div className="terminal-chrome">
         <span><span className="terminal-icon" aria-hidden="true">›_</span> {portfolio.handle}@portfolio: ~</span>
         <button className="text-button" type="button" aria-expanded={expanded} aria-controls="terminal-transcript" onClick={() => setExpanded(!expanded)}>

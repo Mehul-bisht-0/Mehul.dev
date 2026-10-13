@@ -111,3 +111,71 @@ test("partial, stale and unavailable calendars communicate missing data", async 
   await page.getByRole("button", { name: "retry calendars" }).click();
   await expect(page.locator(".activity-status")).toContainText("calendar unavailable");
 });
+
+test("workspace navigation tracks sections and launches the same terminal", async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const disclosure = page.getByRole("button", { name: /workspace\/index/ });
+  const navigation = page.getByRole("navigation", { name: "Workspace sections" });
+  if (testInfo.project.name === "mobile") {
+    await expect(disclosure).toHaveAttribute("aria-expanded", "false");
+    await expect(navigation).toBeHidden();
+    await disclosure.click();
+    await expect(navigation).toBeVisible();
+  }
+  await navigation.getByRole("link", { name: "projects/", exact: true }).click();
+  await expect(page.locator('.rail-navigation a[href="#projects"]')).toHaveAttribute("aria-current", "location");
+  await expect.poll(() => page.locator(".rail-reading progress").getAttribute("value")).not.toBe("0");
+  if (testInfo.project.name === "mobile") {
+    await expect(disclosure).toHaveAttribute("aria-expanded", "false");
+    await disclosure.click();
+  }
+  await page.getByRole("button", { name: /open terminal/ }).click();
+  const input = page.getByRole("textbox", { name: "Terminal command" });
+  await expect(input).toBeFocused();
+  await expect(page.locator(".terminal")).toHaveClass(/terminal-expanded/);
+  await input.fill("coffee");
+  await input.press("Enter");
+  await expect(page.getByRole("log")).toContainText("coffee.exe");
+  await input.press("Escape");
+  await expect(page.locator(".terminal")).not.toHaveClass(/terminal-expanded/);
+  await page.keyboard.press("Control+Backquote");
+  await expect(page.locator(".terminal")).toHaveClass(/terminal-expanded/);
+  await expect(input).toBeFocused();
+  await expect(page.getByRole("log")).toContainText("coffee.exe");
+  await expect(page.locator(".rail-session-details time")).toHaveText(/\d{2}:\d{2}:\d{2} UTC/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test("project view changes preserve details, terminal history and activity selection", async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "coffee", exact: true }).click();
+  await page.getByLabel("Activity year").selectOption("2024");
+  await page.getByRole("tab", { name: "LeetCode", exact: true }).click();
+  await page.locator(".project-details summary").first().click();
+  const details = page.locator(".project-details").first();
+  await expect(page.getByRole("button", { name: "List view" })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Grid view" }).click();
+  await expect(page.locator(".project-list")).toHaveClass(/project-mode-grid/);
+  await expect(details).toHaveAttribute("open", "");
+  await page.getByRole("button", { name: "Table view" }).click();
+  await expect(page.getByRole("table")).toBeVisible();
+  await expect(details).toHaveAttribute("open", "");
+  await expect(page.getByRole("row")).toHaveCount(6);
+  if (testInfo.project.name === "mobile") expect(await page.locator(".project-table-scroll").evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true);
+  await page.getByRole("searchbox", { name: "Search projects" }).fill("redis");
+  await expect(page.getByRole("row")).toHaveCount(2);
+  await expect(page.getByRole("table")).toContainText("Dead-letter Recovery Job Queue");
+  await page.getByRole("searchbox", { name: "Search projects" }).fill("no-such-stack");
+  await expect(page.locator(".project-no-results")).toContainText("0 matches");
+  await page.getByRole("button", { name: "clear search" }).click();
+  await expect(page.getByRole("row")).toHaveCount(6);
+  await page.getByRole("button", { name: "List view" }).click();
+  await expect(details).toBeVisible();
+  await expect(details).toHaveAttribute("open", "");
+  await expect(page.getByRole("log")).toContainText("coffee.exe");
+  await expect(page.getByLabel("Activity year")).toHaveValue("2024");
+  await expect(page.getByRole("tab", { name: "LeetCode", exact: true })).toHaveAttribute("aria-selected", "true");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});

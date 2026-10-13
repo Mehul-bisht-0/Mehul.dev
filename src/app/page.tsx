@@ -1,5 +1,7 @@
 import ActivityMap from "@/components/ActivityMap";
 import Terminal from "@/components/Terminal";
+import WorkspaceRail from "@/components/WorkspaceRail";
+import ProjectExplorer from "@/components/ProjectExplorer";
 import { portfolio } from "@/config/portfolio";
 
 export const dynamic = "force-dynamic";
@@ -15,11 +17,14 @@ export default function Home() {
       <a href="#main" className="skip-link">Skip to portfolio</a>
       <header className="site-header">
         <div className="header-inner">
-          <a href="#home" className="brand" aria-label="Mehul Bisht home"><span className="brand-mark" aria-hidden="true">›_</span><span>mehul<span className="muted">.dev</span></span></a>
+          <a href="#home" className="brand" aria-label={`${portfolio.name} home`}><span className="brand-mark" aria-hidden="true">›_</span><span>{portfolio.handle}<span className="muted">.dev</span></span></a>
           <nav aria-label="Main navigation"><a href="#activity">activity</a><a href="#projects">projects</a><a href="#experience">experience</a><a href="#about">about</a></nav>
           <span className="header-mode"><span aria-hidden="true">☾</span> night session</span>
         </div>
       </header>
+      <div className="portfolio-workspace">
+      <WorkspaceRail />
+      <div className="workspace-content">
       <main id="main" className="page-container">
         <section id="home" tabIndex={-1} className="intro-section" aria-labelledby="intro-title">
           <div className="intro-grid">
@@ -49,7 +54,7 @@ export default function Home() {
         <section id="projects" tabIndex={-1} className="portfolio-section" aria-labelledby="projects-title">
           <div id="projects-title"><SectionHeading number="02" command="ls projects/" note="5 selected repositories" /></div>
           <p className="section-intro">Things I built to turn a question into something that runs.</p>
-          <div className="project-list">
+          <ProjectExplorer projects={portfolio.projects}>
             {portfolio.projects.map((project, index) => (
               <article className="project-row" key={project.slug}>
                 <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
@@ -63,7 +68,7 @@ export default function Home() {
                 <a className="repo-link" href={project.repository} target="_blank" rel="noreferrer" aria-label={`${project.name} repository`}>[ source ↗ ]</a>
               </article>
             ))}
-          </div>
+          </ProjectExplorer>
           <a className="all-repos-link" href={`https://github.com/${portfolio.github}?tab=repositories`} target="_blank" rel="noreferrer"><span className="green">$</span> open github/repositories <span aria-hidden="true">↗</span></a>
         </section>
 
@@ -78,6 +83,8 @@ export default function Home() {
         </section>
       </main>
       <footer className="site-footer"><div className="footer-inner"><div><span className="green">{portfolio.handle}@portfolio</span><span className="muted">:~$ </span><span className="footer-message">exit 0</span></div><div className="footer-social">{portfolio.social.map((link) => <a href={link.href} key={link.label} target="_blank" rel="noreferrer">{link.label} ↗</a>)}</div><a href="#home" className="back-to-top">back to top ↑</a></div><p>© {year} {portfolio.name} <span aria-hidden="true">·</span> built with intent, served after dark.</p></footer>
+      </div>
+      </div>
     </>
   );
 }

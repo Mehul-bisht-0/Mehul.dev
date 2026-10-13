@@ -31,6 +31,12 @@ The five intensity levels represent 0, 1–2, 3–5, 6–9, and 10+ events. Use 
 
 Commands: `help`, `whoami`, `activity`, `projects`, `experience`, `about`, `clear`, `coffee`. Compact commands navigate to sections; expanded commands print fuller details. Up/Down recall history, Tab completes matching commands, and Escape collapses. This is a portfolio command interpreter and executes no system commands.
 
+## Workspace navigation
+
+A sticky file-explorer rail tracks the visible section on desktop. It includes public profile shortcuts, a UTC clock, elapsed browser-session time, and reading progress. On smaller screens, use the `workspace/index` disclosure above the introduction. The rail's **open terminal** button or **Ctrl/Command + backtick** expands the existing shell and focuses its input; command history is preserved.
+
+The project section keeps its original list as the default, with optional Grid and Table views inspired by the reference portfolio. Search matches names, focus areas, descriptions, and technologies. Switching views retains expanded project details, shell state, and the selected activity source/year. The table scrolls inside its own container on mobile. A pre-refinement source snapshot is retained in ignored `.snapshots/` for restoring the previous design.
+
 ## Verify
 
 ```sh
