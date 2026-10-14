@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120" width="1600" height="1120" fill="none">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" stroke="#55775e" stroke-opacity=".13" stroke-width=".6"/><circle cx="0" cy="0" r="1" fill="#6d9274" fill-opacity=".25"/></pattern>
+    <g id="screw"><circle r="6" stroke="#83917b"/><path d="m-3 3 6-6" stroke="#83917b"/></g>
+    <g id="resistor"><path d="M0 0h12l4-7 8 14 8-14 8 14 8-14 4 7h12"/></g>
+    <g id="capacitor"><path d="M0 0h19m0-11v22m9-22v22m0-11h20"/></g>
+    <g id="diode"><path d="M0 0h20m0-9 15 9-15 9V-9m15-2v22m0-11h20"/></g>
+    <g id="socket"><circle r="9"/><circle r="3"/></g>
+    <g id="dial"><circle r="60"/><circle r="48" stroke-dasharray="1 8"/><circle r="33"/><path d="M0-33v12M-70 0h6M64 0h6M0-70v6M-50-50l5 5M50-50l-5 5M-50 50l5-5M50 50l-5-5"/></g>
+    <g id="tube"><rect x="-21" y="-44" width="42" height="88" rx="21"/><path d="M-13-5h26M-13 0h26M-13 5h26M0-44v27m0 34v27M-11 44v14M0 44v14M11 44v14"/><path d="M-10 16q10-17 20 0"/></g>
+  </defs>
+  <rect width="1600" height="1120" fill="url(#grid)"/>
+  <g stroke="#779578" stroke-width="1" opacity=".72">
+    <rect x="34" y="54" width="390" height="247" rx="4"/><rect x="55" y="78" width="247" height="166" rx="3"/>
+    <path d="M65 160h228M178 88v146M65 118h228M65 202h228M122 88v146M234 88v146" opacity=".35"/>
+    <path d="M65 160q14-60 28 0t28 0 28 0 28 0 28 0 28 0 28 0 28 0" stroke="#9dc69b" stroke-width="1.8"/>
+    <circle cx="354" cy="126" r="24"/><path d="M354 102v12"/><circle cx="354" cy="200" r="24"/><path d="m338 181 7 8"/>
+    <use href="#socket" x="84" y="273"/><use href="#socket" x="132" y="273"/><path d="M170 270h113M170 277h113"/>
+    <use href="#screw" x="44" y="64"/><use href="#screw" x="414" y="291"/>
+    <path d="M84 282v52h62"/><use href="#resistor" x="146" y="334"/><path d="M210 334h90v65h100"/>
+    <use href="#capacitor" x="400" y="399"/><path d="M448 399h140v-42h117"/><use href="#socket" x="714" y="357"/>
+    <use href="#dial" x="1396" y="174"/><path d="m1396 174 18-39" stroke="#b59a68" stroke-width="2"/>
+    <rect x="1289" y="64" width="215" height="224" rx="4"/><use href="#screw" x="1300" y="76"/><use href="#screw" x="1492" y="276"/>
+    <path d="M1396 288v72h-70"/><use href="#diode" x="1271" y="360"/><path d="M1271 360h-68v67h-145"/>
+    <use href="#tube" x="96" y="562"/><path d="M96 518v-58h86"/><use href="#resistor" x="182" y="460"/><path d="M246 460h79v42"/>
+    <path d="M96 620v67h77"/><use href="#capacitor" x="173" y="687"/><path d="M221 687h125v-45h91"/>
+    <path d="M14 800h120v-53h135"/><use href="#resistor" x="269" y="747"/><path d="M333 747h217v-43h93"/>
+    <path d="M1163 578h112v48h149v-84h157"/><use href="#capacitor" x="1300" y="626"/>
+    <use href="#dial" x="1480" y="766"/><path d="m1480 766-27-20" stroke="#b59a68" stroke-width="2"/>
+    <path d="M1480 836v85h-132"/><use href="#resistor" x="1284" y="921"/><path d="M1284 921h-72v-52h-141"/>
+    <rect x="60" y="885" width="312" height="165" rx="4"/><path d="M84 978a132 132 0 0 1 264 0M98 970a117 117 0 0 1 236 0"/>
+    <path d="m216 1015-62-91M106 952l8 5M141 913l5 8M184 894l1 10M230 891l-1 11M273 905l-4 9M313 934l-8 6"/>
+    <use href="#screw" x="73" y="897"/><use href="#screw" x="360" y="1038"/>
+    <path d="M451 1014h122v-54h93"/><use href="#diode" x="666" y="960"/><path d="M721 960h136v50h211v-71h57"/>
+    <path d="M786 88h101v48h140M887 136v75h-70"/><use href="#capacitor" x="769" y="211"/>
+    <circle cx="887" cy="136" r="3" fill="#779578"/><circle cx="300" cy="334" r="3" fill="#779578"/><circle cx="96" cy="687" r="3" fill="#779578"/>
+    <path d="M325 502v33m-12 0h24m-19 6h14m-10 6h6M1058 427v24m-12 0h24m-19 6h14m-10 6h6"/>
+    <path d="M507 135v108m-10-98h20m-20 24h20m-20 24h20m-20 24h20M1154 704v107m-10-98h20m-20 24h20m-20 24h20m-20 24h20" opacity=".6"/>
+  </g>
+  <g fill="#a38d64" font-family="monospace" font-size="9" letter-spacing="2" opacity=".8">
+    <text x="58" y="45">01 / ANALOG OSCILLOSCOPE</text><text x="70" y="97">CH 01</text><text x="327" y="168">V / DIV</text><text x="329" y="245">TIMEBASE</text>
+    <text x="1311" y="53">02 / SIGNAL GENERATOR</text><text x="1368" y="265">FREQUENCY</text><text x="116" y="571">V1</text><text x="180" y="444">R1 / 10K</text><text x="177" y="714">C1 / 22µF</text>
+    <text x="74" y="876">03 / DC PANEL METER</text><text x="205" y="1038">mA</text><text x="1455" y="854">GAIN</text><text x="667" y="945">D1</text><text x="711" y="1044">MB–01 / BENCH SCHEMATIC</text>
+    <text x="520" y="180">REFERENCE</text><text x="1174" y="773">CALIBRATION</text><text x="922" y="122">RC NETWORK</text>
+  </g>
+</svg>

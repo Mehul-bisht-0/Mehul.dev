@@ -1,19 +1,21 @@
 :root {
-  --background: #0b0f12;
-  --panel: #10161a;
-  --panel-deep: #0d1215;
-  --text: #e3e8e6;
-  --muted: #99a5a7;
-  --dim: #758286;
-  --border: #263136;
-  --green: #9ccfa7;
-  --amber: #d9b477;
+  --background: #070e09;
+  --panel: #0d1910;
+  --panel-deep: #09130c;
+  --text: #dce9cc;
+  --muted: #a1b594;
+  --dim: #809970;
+  --border: #2a4228;
+  --green: #b2eb82;
+  --amber: #d4d991;
+  --pixel: "VT323", "Cascadia Code", monospace;
   --mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 100px; }
-body { margin: 0; background: var(--background); color: var(--text); font-family: var(--mono); font-size: 13px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+body { margin: 0; position: relative; isolation: isolate; background: var(--background); color: var(--text); font-family: var(--mono); font-size: 13px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+.analog-backdrop { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: url("/analog-bench.svg") center top / 1600px 1120px repeat; opacity: .5; }
 button, input, select { font: inherit; }
 button, select { cursor: pointer; }
 button { color: inherit; }
@@ -221,3 +223,77 @@ h1 { margin: 15px 0 10px; font-size: clamp(32px, 4.5vw, 46px); line-height: 1.2;
   .site-footer { padding: 22px 20px; }.footer-inner { flex-wrap: wrap; font-size: 10px; gap: 14px; }.footer-social { gap: 15px; }.back-to-top { font-size: 9px; }.site-footer > p { font-size: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; }*, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* The bench illustration stays behind solid, readable instrument surfaces. */
+.site-header { background: rgb(11 15 18 / .94); }
+.intro-copy { background: rgb(11 15 18 / .88); }
+.workspace-rail .rail-body { background: rgb(11 15 18 / .93); }
+.project-mode-list .project-row, .about-grid, .site-footer, .portfolio-section > div[id$="title"] { background: rgb(11 15 18 / .94); }
+.project-mode-list .project-row { padding-left: 10px; padding-right: 10px; }
+.instrument-terminal { background: #171c19; border-color: #4c594d; position: relative; padding: 0 9px 9px; }
+.instrument-terminal::before, .instrument-terminal::after { content: ""; position: absolute; width: 5px; height: 5px; border: 1px solid #64705e; border-radius: 50%; top: 13px; }
+.instrument-terminal::before { left: 8px; }.instrument-terminal::after { right: 8px; }
+.instrument-terminal .terminal-chrome { background: transparent; color: #c0c8b7; border-bottom: 1px solid #3b453c; padding: 9px 13px; margin-bottom: 9px; }
+.terminal-model { color: #a2ac97; font-size: 8px; letter-spacing: 1.1px; }
+.instrument-terminal .terminal-icon { font-size: 8px; }
+.instrument-terminal .terminal-body { margin-top: 9px; background: #09110e; border: 1px solid #36483a; padding: 15px 16px; }
+.instrument-terminal .terminal-welcome { font-size: 10px; margin-bottom: 11px; }
+.instrument-terminal .terminal-input-row input { color: #c5dfc3; }
+.instrument-terminal .terminal-entry pre { color: #b8c7ba; }
+.instrument-terminal .terminal-entry pre.terminal-error { color: var(--amber); }
+.instrument-terminal .command-shortcuts { border-top: 0; padding: 8px 8px 0; gap: 0 16px; }
+.terminal-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+.terminal-suggestions button { border: 1px solid #34483b; background: #121f17; color: var(--green); padding: 3px 7px; font-size: 10px; }
+.terminal-suggestions button span { color: var(--dim); }
+.signal-instrument { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(220px, 1fr) 47px; gap: 13px; align-items: stretch; padding: 13px 12px; border: 1px solid #3c483c; background: #151b17; }
+.scope-display { background: #08150e; border: 1px solid #496549; outline: 3px solid #0c120d; padding: 8px 10px 6px; min-width: 0; align-self: center; }
+.scope-screen-label, .scope-readout { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 8px; color: #9fc29b; font-variant-numeric: tabular-nums; }
+.scope-screen-label b { font-size: 7px; color: #b2c8a6; font-weight: 400; margin-left: 7px; letter-spacing: .8px; }
+.scope-screen-label > span:last-child { color: var(--amber); font-size: 7px; }
+.scope-screen { display: block; width: 100%; height: 67px; margin: 4px 0; fill: none; overflow: hidden; }
+.scope-grid { stroke: #23412b; stroke-width: .6; }.scope-crosshair { stroke: #426248; stroke-width: .6; stroke-dasharray: 2 3; }.scope-trace { stroke: #b0dd99; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.scope-readout { font-size: 7px; color: #8daa85; }
+.scope-control-bank { display: flex; flex-direction: column; gap: 10px; }
+.scope-bank-label { display: flex; align-items: center; justify-content: space-between; gap: 9px; color: #c4c6ad; font-size: 8px; letter-spacing: .8px; }
+.scope-bank-label > span { color: #a9ae98; font-size: 7px; }
+.waveform-switch { display: flex; gap: 4px; }
+.waveform-switch button { display: flex; align-items: center; justify-content: center; gap: 7px; flex: 1; border: 1px solid #414a3f; background: #222a21; color: #b7beaa; padding: 2px 5px; font-size: 19px; line-height: 1.3; }
+.waveform-switch button span { font-size: 8px; }.waveform-switch button[aria-pressed="true"] { color: #c3dcb4; background: #2b3a29; border-color: #80916b; }.waveform-switch button:hover { border-color: var(--green); }
+.scope-dials { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+.scope-dials > label { display: grid; grid-template-columns: 27px minmax(0, 1fr); gap: 1px 8px; align-items: center; font-size: 7px; color: #c0c4ae; letter-spacing: .3px; }
+.scope-dials b { display: block; color: var(--amber); font-size: 9px; font-weight: 400; font-variant-numeric: tabular-nums; }
+.scope-knob { display: inline-flex; align-items: flex-start; justify-content: center; width: 26px; height: 26px; border: 2px solid #72765e; outline: 2px solid #2d3429; border-radius: 50%; background: #1c251b; grid-row: span 2; }
+.scope-knob i { display: block; width: 2px; height: 8px; background: #d7ce9b; margin-top: 1px; }
+.scope-dials input { width: 100%; min-width: 0; height: 13px; margin: 0; accent-color: #aabb8b; cursor: pointer; grid-column: 2; }
+.scope-hold { border: 1px solid #515846; padding: 7px 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; background: #252a20; font-size: 7px; color: #d0ccb2; letter-spacing: .6px; }
+.scope-hold:hover { border-color: var(--amber); }.scope-hold > span:last-child { color: #a9ae98; font-size: 7px; letter-spacing: 0; }.scope-hold-led { height: 5px; width: 5px; background: #6a7452; border: 1px solid #8b9571; border-radius: 50%; }.scope-hold-led.is-held { background: var(--amber); }
+@media (max-width: 800px) { .terminal-model { display: none; }.signal-instrument { gap: 10px; padding: 10px; grid-template-columns: minmax(155px, 1fr) minmax(210px, 1fr) 40px; }.scope-readout > span:last-child { display: none; } }
+@media (max-width: 560px) {
+  .analog-backdrop { background-size: 1000px 700px; opacity: .4; }.instrument-terminal { padding: 0 6px 6px; }.instrument-terminal .terminal-chrome { padding: 8px 11px; }.instrument-terminal .terminal-body { padding: 13px 10px; }.instrument-terminal .terminal-welcome { font-size: 9px; }.instrument-terminal .terminal-prompt { font-size: 9px; }.instrument-terminal .terminal-input-row input { font-size: 10px; }
+  .signal-instrument { grid-template-columns: minmax(0, 1fr) 39px; gap: 11px; padding: 11px 9px; }.scope-display { grid-column: 1 / -1; }.scope-screen { height: 60px; }.scope-control-bank { min-width: 0; gap: 10px; }.scope-dials { gap: 12px; }.scope-dials > label { grid-template-columns: 23px minmax(0, 1fr); column-gap: 7px; font-size: 7px; }.scope-knob { width: 23px; height: 23px; }.waveform-switch button { min-height: 33px; font-size: 18px; }.scope-hold { font-size: 6px; }.scope-readout > span:last-child { display: inline; }.terminal-suggestions button { font-size: 9px; min-height: 29px; }.instrument-terminal .command-shortcuts { gap: 0 14px; }.project-mode-list .project-row { padding-left: 5px; padding-right: 5px; }
+}
+
+/* Coarse phosphor samples and stepped geometry, like a low-resolution CRT. */
+.analog-backdrop.crt-backdrop { background: url("/oscilloscope-grid.svg") left top / 96px 96px repeat; opacity: 1; overflow: hidden; }
+.crt-backdrop-traces { width: 100%; height: 100%; display: block; image-rendering: pixelated; fill: none; }
+.crt-graticule { stroke: #559b3f; stroke-width: 1; stroke-dasharray: 1 5; opacity: .17; }
+.crt-center-ticks { stroke: #85b969; stroke-width: 1; opacity: .17; }
+.crt-backdrop-primary { stroke: #a3ed64; stroke-width: 1; opacity: .17; }
+.crt-backdrop-persistence { stroke: #6bac44; stroke-width: 1; opacity: .08; }
+.crt-backdrop-secondary { stroke: #b0c85e; stroke-width: 1; opacity: .085; }
+.crt-channel-marker { position: absolute; left: 10px; font: 17px var(--pixel); color: #719c4f; opacity: .6; }.crt-channel-one { top: 45%; }.crt-channel-two { top: 72%; }
+.crt-raster { position: fixed; inset: 0; pointer-events: none; z-index: 20; background: url("/crt-raster.svg") left top / 4px 4px repeat; opacity: .25; }
+.crt-screen-edge { position: fixed; inset: 5px; z-index: 30; pointer-events: none; border: 1px solid #37532c; outline: 4px solid #030805; clip-path: polygon(0 9px, 9px 9px, 9px 0, calc(100% - 9px) 0, calc(100% - 9px) 9px, 100% 9px, 100% calc(100% - 9px), calc(100% - 9px) calc(100% - 9px), calc(100% - 9px) 100%, 9px 100%, 9px calc(100% - 9px), 0 calc(100% - 9px)); }
+.site-header { background: rgb(7 14 9 / .95); }.intro-copy, .workspace-rail .rail-body { background: rgb(7 14 9 / .91); }.project-mode-list .project-row, .about-grid, .site-footer, .portfolio-section > div[id$="title"] { background: rgb(7 14 9 / .94); }
+h1 { font-family: var(--pixel); font-size: 52px; font-weight: 400; letter-spacing: 1px; text-shadow: 1px 0 #72965a; }
+.section-heading h2 { font-family: var(--pixel); font-size: 24px; letter-spacing: .5px; }.project-content h3 { font-family: var(--pixel); font-size: 24px; letter-spacing: .3px; }.project-mode-grid .project-content h3 { font-family: var(--pixel); font-size: 22px; }.rail-profile-name { font-family: var(--pixel); font-size: 23px; letter-spacing: .5px; }
+.brand-mark, .rail-avatar { background: #142210; border-color: #6a8e4c; }.rail-navigation a[aria-current="location"] { background: #172812; }.night-scene { border-color: #2a4228; }.ascii-moon { color: var(--green); }
+.activity-panel { --heat-0: #172619; --heat-1: #2c4926; --heat-2: #48783a; --heat-3: #7fb65b; --heat-4: #b9ec82; }.heatmap-cell, .heatmap-legend i { border-radius: 0; }.activity-tabs button[aria-selected="true"] { background: #23371a; }.project-view-controls button[aria-pressed="true"] { background: #23371a; border-color: #57773d; }
+.instrument-terminal { background: #121e11; border: 2px solid #5c7844; box-shadow: inset 2px 2px #24371c, 3px 3px #030805; }.instrument-terminal::before, .instrument-terminal::after { border-radius: 0; width: 4px; height: 4px; border-color: #728e52; }.instrument-terminal .terminal-chrome { font-family: var(--pixel); font-size: 17px; color: #c5d9a9; border-color: #405b31; }.instrument-terminal .terminal-chrome .text-button { font: 16px var(--pixel); color: #b1ca96; }.terminal-model { font: 13px var(--pixel); letter-spacing: 1px; }.instrument-terminal .terminal-body { background: #061109; border-color: #456b34; box-shadow: inset 2px 2px #020704; }
+.instrument-terminal .terminal-welcome { color: var(--muted); font: 16px var(--pixel); }.instrument-terminal .terminal-transcript { font: 19px/1.3 var(--pixel); }.instrument-terminal .terminal-entry pre { color: #b7d69b; line-height: 1.3; }.instrument-terminal .terminal-prompt { font: 18px var(--pixel); }.instrument-terminal .terminal-input-row input { font: 19px var(--pixel); color: #d5f0b0; }.instrument-terminal .terminal-input-row input::placeholder { color: #8ba177; }.instrument-terminal .command-shortcuts button { font: 16px var(--pixel); }.instrument-terminal .command-shortcuts { padding-top: 10px; }.terminal-suggestions button { font: 16px var(--pixel); background: #13240e; border-color: #3f6031; }.run-command { background: #13230f; border-color: #3f6031; }
+.signal-instrument { background: #101b0d; border-color: #3f5c2d; }.scope-display { background: #071708; border: 2px solid #648947; outline: 2px solid #020803; box-shadow: inset 3px 3px #020a03; }.scope-screen { height: 80px; image-rendering: pixelated; }.scope-grid { stroke: #2c4e21; stroke-width: 1; stroke-dasharray: 1 3; }.scope-crosshair { stroke: #456c31; stroke-width: 1; stroke-dasharray: 1 3; }.scope-trace { stroke: #c0f67e; stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; }.scope-trace-persistence { stroke: #48782d; stroke-width: 2; opacity: .7; }
+.scope-screen-label, .scope-readout { font: 14px var(--pixel); color: #b3d28b; }.scope-screen-label b { font: 12px var(--pixel); color: #d2e8ac; }.scope-screen-label > span:last-child { font: 12px var(--pixel); }.scope-readout { font-size: 12px; }.scope-bank-label { font: 14px var(--pixel); color: #c5d9a5; letter-spacing: .8px; }.scope-bank-label > span { font: 12px var(--pixel); }.waveform-switch button { background: #1b2b13; border-color: #486333; color: #bbd39c; }.waveform-switch button span { font: 14px var(--pixel); }.waveform-switch button[aria-pressed="true"] { background: #2a411b; border-color: #9ebc68; color: #d4eea8; box-shadow: inset 2px 2px #172b0e; }.scope-dials > label { font: 12px var(--pixel); color: #b5cb96; }.scope-dials b { font: 14px var(--pixel); }.scope-knob { clip-path: polygon(25% 0, 75% 0, 75% 12%, 88% 12%, 88% 25%, 100% 25%, 100% 75%, 88% 75%, 88% 88%, 75% 88%, 75% 100%, 25% 100%, 25% 88%, 12% 88%, 12% 75%, 0 75%, 0 25%, 12% 25%, 12% 12%, 25% 12%); border-radius: 0; background: #23371a; border-color: #b4c38b; outline-color: #3c542d; }.scope-knob i { background: #dcf0ac; }.scope-dials input { accent-color: #bbdf7b; }.scope-hold { font: 11px var(--pixel); letter-spacing: 0; color: #d0dda8; background: #26361c; border-color: #5c7240; }.scope-hold > span:last-child { font: 11px var(--pixel); color: #b5c598; }.scope-hold-led { border-radius: 0; border-color: #9fbf71; background: #5b773b; }.scope-hold-led.is-held { background: #e0eb91; }
+@media (max-width: 800px) { h1 { font-size: 40px; }.scope-readout { font-size: 11px; } }
+@media (max-width: 560px) {
+  h1 { font-size: 38px; letter-spacing: 0; }.section-heading h2 { font-size: 22px; }.project-content h3, .project-mode-grid .project-content h3 { font-size: 22px; }.crt-screen-edge { inset: 3px; outline-width: 2px; }.crt-channel-marker { display: none; }.instrument-terminal .terminal-chrome, .instrument-terminal .terminal-chrome .text-button { font: 14px var(--pixel); }.instrument-terminal .terminal-welcome { font: 14px var(--pixel); }.instrument-terminal .terminal-prompt { font: 16px var(--pixel); }.instrument-terminal .terminal-input-row input { font: 18px var(--pixel); }.instrument-terminal .terminal-transcript { font: 17px/1.3 var(--pixel); }.instrument-terminal .command-shortcuts button { font: 15px var(--pixel); }.instrument-terminal .command-shortcuts { gap: 0 14px; }.terminal-suggestions button { font: 15px var(--pixel); }.scope-screen { height: 72px; }.scope-bank-label { font-size: 13px; }.scope-dials > label { font-size: 11px; }.scope-hold, .scope-hold > span:last-child { font: 10px var(--pixel); }
+}

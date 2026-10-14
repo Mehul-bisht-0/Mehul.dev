@@ -31,6 +31,12 @@ The five intensity levels represent 0, 1–2, 3–5, 6–9, and 10+ events. Use 
 
 Commands: `help`, `whoami`, `activity`, `projects`, `experience`, `about`, `clear`, `coffee`. Compact commands navigate to sections; expanded commands print fuller details. Up/Down recall history, Tab completes matching commands, and Escape collapses. This is a portfolio command interpreter and executes no system commands.
 
+The virtual filesystem also supports `ls`, `cd projects`, `cd ..`, `pwd`, `cat about.txt`, and `open <project-slug>`. `history` prints the current session's commands; Ctrl+C cancels an unfinished line while preserving normal copy when text is selected. Suggestions complete commands and file/project arguments. Opening a project in compact mode reveals its existing details in the project explorer.
+
+The analog instrument panel is a virtual oscilloscope. Its buttons and sliders share state with `signal sine|square|triangle`, `tune 1–8`, `gain 1–5`, `hold`, and `resume`. `scope` prints its settings. The illustrative waveform pauses for reduced motion; it represents no physical hardware or measured activity.
+
+The pixelated CRT treatment uses stepped signal samples (3 units horizontally, 2 vertically), crisp SVG edges, a repeating phosphor-dot graticule, light scanlines, and a self-hosted VT323 display font. The full-page dual traces follow the same waveform, frequency, gain, and hold state as the terminal. Both background and panel respect reduced motion. All visuals are local SVG/CSS, with no gradients, external image requests, or canvas dependencies. The earlier electrical bench SVG is retained as an unused previous design asset.
+
 ## Workspace navigation
 
 A sticky file-explorer rail tracks the visible section on desktop. It includes public profile shortcuts, a UTC clock, elapsed browser-session time, and reading progress. On smaller screens, use the `workspace/index` disclosure above the introduction. The rail's **open terminal** button or **Ctrl/Command + backtick** expands the existing shell and focuses its input; command history is preserved.

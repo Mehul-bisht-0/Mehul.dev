@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, useId, useMemo, useState, type ReactNode } from "react";
+import { Children, useEffect, useId, useMemo, useState, type ReactNode } from "react";
 import type { Project } from "@/config/portfolio";
 
 type ProjectView = "list" | "grid" | "table";
@@ -13,6 +13,7 @@ const views: { id: ProjectView; label: string; icon: ReactNode }[] = [
 export default function ProjectExplorer({ projects, children }: { projects: Project[]; children: ReactNode }) {
   const [view, setView] = useState<ProjectView>("list");
   const [query, setQuery] = useState("");
+  const [inspectSlug, setInspectSlug] = useState<string | null>(null);
   const searchId = useId();
   const childRows = Children.toArray(children);
   const visible = useMemo(() => {
@@ -23,6 +24,28 @@ export default function ProjectExplorer({ projects, children }: { projects: Proj
     });
   }, [projects, query]);
   const matches = visible.filter(Boolean).length;
+
+  useEffect(() => {
+    const inspect = (event: Event) => {
+      const slug: unknown = (event as CustomEvent).detail;
+      if (typeof slug !== "string" || !projects.some((project) => project.slug === slug)) return;
+      setView("list");
+      setQuery("");
+      setInspectSlug(slug);
+    };
+    window.addEventListener("portfolio:inspect-project", inspect);
+    return () => window.removeEventListener("portfolio:inspect-project", inspect);
+  }, [projects]);
+  useEffect(() => {
+    if (!inspectSlug) return;
+    const article = document.getElementById(`project-${inspectSlug}`);
+    const details = article?.querySelector("details");
+    if (details) details.open = true;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    article?.scrollIntoView({ behavior: reducedMotion ? "instant" : "smooth", block: "center" });
+    article?.querySelector("summary")?.focus({ preventScroll: true });
+    setInspectSlug(null);
+  }, [inspectSlug]);
 
   return (
     <div className="project-explorer">

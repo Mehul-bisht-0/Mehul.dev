@@ -56,7 +56,7 @@ export default function Home() {
           <p className="section-intro">Things I built to turn a question into something that runs.</p>
           <ProjectExplorer projects={portfolio.projects}>
             {portfolio.projects.map((project, index) => (
-              <article className="project-row" key={project.slug}>
+              <article className="project-row" id={`project-${project.slug}`} key={project.slug}>
                 <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
                 <div className="project-content">
                   <span className="project-category">{project.category}</span>

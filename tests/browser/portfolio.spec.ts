@@ -179,3 +179,58 @@ test("project view changes preserve details, terminal history and activity selec
   await expect(page.getByRole("tab", { name: "LeetCode", exact: true })).toHaveAttribute("aria-selected", "true");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+
+test("interactive instruments and virtual shell work together", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "expand shell" }).click();
+  const input = page.getByRole("textbox", { name: "Terminal command" });
+  const execute = async (command: string) => { await input.fill(command); await input.press("Enter"); };
+  await execute("cd projects");
+  await expect(page.locator(".terminal-prompt")).toContainText("~/projects");
+  await execute("ls");
+  await expect(page.getByRole("log")).toContainText("aco-its");
+  await input.fill("open filing");
+  await input.press("Tab");
+  await expect(input).toHaveValue("open filinglens");
+  await input.press("Enter");
+  await expect(page.getByRole("log")).toContainText("FilingLens");
+  await execute("signal square");
+  await expect(page.getByRole("button", { name: "square waveform" })).toHaveAttribute("aria-pressed", "true");
+  await execute("tune 6");
+  await expect(page.getByRole("slider", { name: "Oscillator frequency" })).toHaveValue("6");
+  await page.getByRole("slider", { name: "Oscillator gain" }).focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("slider", { name: "Oscillator gain" })).toHaveValue("3");
+  await execute("scope");
+  await expect(page.getByRole("log")).toContainText("gain       3×");
+  await execute("hold");
+  await expect(page.getByRole("button", { name: "RELEASE trace" })).toHaveAttribute("aria-pressed", "true");
+  const held = await page.getByTestId("scope-trace").getAttribute("d");
+  await execute("history");
+  await expect(page.getByTestId("scope-trace")).toHaveAttribute("d", held!);
+  await expect(page.getByRole("log")).toContainText("cd projects");
+  await page.getByRole("button", { name: "RELEASE trace" }).click();
+  await expect(page.locator(".scope-screen-label")).toContainText("STATIC");
+  await input.fill("an unfinished command");
+  await input.press("Control+c");
+  await expect(input).toHaveValue("");
+  expect(await page.locator(".analog-backdrop").evaluate((element) => getComputedStyle(element).backgroundImage)).toContain("oscilloscope-grid.svg");
+  await expect(page.locator(".crt-backdrop")).toHaveAttribute("data-waveform", "square");
+  await expect(page.getByTestId("background-trace")).toHaveAttribute("d", /H\d+ V\d+/);
+  expect(await page.getByTestId("scope-trace").getAttribute("d")).not.toMatch(/[LCQ]/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test("compact open command reveals a project even after filtering", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Table view" }).click();
+  await page.getByRole("searchbox", { name: "Search projects" }).fill("no-matches");
+  const input = page.getByRole("textbox", { name: "Terminal command" });
+  await input.fill("open aco-its");
+  await input.press("Enter");
+  await expect(page.getByRole("button", { name: "List view" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#project-aco-its details")).toHaveAttribute("open", "");
+  await expect(page.locator("#project-aco-its summary")).toBeFocused();
+});
