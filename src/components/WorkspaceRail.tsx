@@ -97,6 +97,7 @@ export default function WorkspaceRail() {
           <div className="rail-group-label">SYSTEM</div>
           <button type="button" className="rail-terminal-action" onClick={() => { window.dispatchEvent(new Event("portfolio:open-terminal")); setMobileOpen(false); }}><RailIcon kind="terminal" /><span>open terminal</span><kbd>⌃`</kbd></button>
           <div className="rail-theme"><RailIcon kind="moon" /><span>night mode</span><span className="green">on</span></div>
+          <button type="button" className="rail-terminal-action" onClick={() => { window.dispatchEvent(new Event("portfolio:open-display")); setMobileOpen(false); }}><RailIcon kind="activity" /><span>display settings</span><span className="green" aria-hidden="true">↗</span></button>
           <div className="rail-session-details"><span>clock <time suppressHydrationWarning>{clock} UTC</time></span><span>session <b>{sessionDuration(uptime)}</b></span></div>
           <div className="rail-reading"><span>reading position</span><span>{progress}%</span><progress aria-label="Reading progress" value={progress} max={100} /></div>
           <span className="rail-signoff">// explore at your own pace</span>

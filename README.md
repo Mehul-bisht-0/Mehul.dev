@@ -43,7 +43,9 @@ The pixelated CRT treatment uses stepped signal samples (3 units horizontally, 2
 
 ## Night drive
 
-The introduction's desert night drive is a server-rendered pixel SVG with a crescent moon, layered dunes, passing cacti, moving road markings, and a car with turning wheels. CSS animates the repeating scenery without a JavaScript animation loop. The scene appears below the intro on mobile and becomes static with reduced motion.
+The introduction's night drive is a server-rendered pixel SVG. Its default cyberpunk city has layered buildings, illuminated windows, billboards, rain, road reflections, and a car beneath a crescent moon. The original desert highway remains selectable. CSS animates the repeating scenery without a JavaScript animation loop. The scene appears below the intro on mobile and becomes static with reduced motion.
+
+The bottom-left **display** panel (also available in the workspace rail) offers Ion cyan, Phosphor green, Amber, and Ember palettes. The palettes cover the page, terminal, activity map, instrument controls, background, and pixel art. It also controls the city/desert scene, motion, CRT texture, and city rain. Preferences persist in `portfolio:appearance` local storage, apply before first paint, and synchronize across tabs. Motion follows the operating system's reduced-motion setting; pausing it also stops the JavaScript oscilloscope loop. Reset affects display preferences only and keeps shell history, activity selections, and audio settings.
 
 ## Background audio
 

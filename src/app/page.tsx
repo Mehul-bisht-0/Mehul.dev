@@ -2,7 +2,7 @@ import ActivityMap from "@/components/ActivityMap";
 import Terminal from "@/components/Terminal";
 import WorkspaceRail from "@/components/WorkspaceRail";
 import ProjectExplorer from "@/components/ProjectExplorer";
-import DesertDrive from "@/components/DesertDrive";
+import NightDrive from "@/components/NightDrive";
 import { portfolio } from "@/config/portfolio";
 import Link from "next/link";
 
@@ -37,7 +37,7 @@ export default function Home() {
               <p className="intro-description">{portfolio.intro}</p>
               <div className="intro-links"><a href="#projects">explore projects <span aria-hidden="true">↓</span></a><a href={portfolio.social[0].href} target="_blank" rel="noreferrer">github <span aria-hidden="true">↗</span></a></div>
             </div>
-            <DesertDrive />
+            <NightDrive />
           </div>
           <Terminal />
           <div className="intro-bottom"><span><span className="green">↳</span> scroll to inspect the source</span><span>human-readable · keyboard-friendly</span></div>

@@ -222,7 +222,7 @@ test("interactive instruments and virtual shell work together", async ({ page })
   await input.fill("an unfinished command");
   await input.press("Control+c");
   await expect(input).toHaveValue("");
-  expect(await page.locator(".analog-backdrop").evaluate((element) => getComputedStyle(element).backgroundImage)).toContain("oscilloscope-grid.svg");
+  expect(await page.locator(".analog-backdrop").evaluate((element) => getComputedStyle(element, "::before").maskImage)).toContain("oscilloscope-grid.svg");
   await expect(page.locator(".crt-backdrop")).toHaveAttribute("data-waveform", "square");
   await expect(page.getByTestId("background-trace")).toHaveAttribute("d", /H\d+ V\d+/);
   expect(await page.getByTestId("scope-trace").getAttribute("d")).not.toMatch(/[LCQ]/);
@@ -334,4 +334,58 @@ test("background music loops, continues between pages and remembers controls", a
   await expect(page.getByRole("button", { name: "Play background music" })).toHaveAttribute("aria-pressed", "false");
   expect(await audio.evaluate((element: HTMLAudioElement) => element.paused)).toBe(true);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test("display settings change the whole palette, preserve workspace state and survive navigation", async ({ page }, testInfo) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "coffee", exact: true }).click();
+  await page.getByLabel("Activity year").selectOption("2024");
+  await page.getByRole("tab", { name: "LeetCode", exact: true }).click();
+  await page.getByRole("button", { name: "Grid view" }).click();
+  const trigger = page.locator(".appearance-trigger");
+  await trigger.click();
+  const panel = page.getByRole("region", { name: "Display settings" });
+  await expect(panel.getByRole("button", { name: "Ion cyan", exact: true })).toBeFocused();
+  await panel.getByRole("checkbox", { name: /^Motion/ }).uncheck();
+  await expect(page.locator(".scope-screen-label")).toContainText("STATIC");
+  const held = await page.getByTestId("scope-trace").getAttribute("d");
+  const colors = new Set<string>();
+  for (const [name, id] of [["Ion cyan", "ion"], ["Phosphor", "phosphor"], ["Amber", "amber"], ["Ember", "ember"]]) {
+    await panel.getByRole("button", { name, exact: true }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", id);
+    colors.add(await page.locator("body").evaluate((element) => getComputedStyle(element).backgroundColor));
+  }
+  expect(colors.size).toBe(4);
+  await expect(page.getByTestId("scope-trace")).toHaveAttribute("d", held!);
+  await panel.getByRole("button", { name: "desert highway", exact: true }).click();
+  await expect(page.locator(".scene-city").first()).toBeHidden();
+  await expect(page.locator(".scene-desert")).toBeVisible();
+  await panel.getByRole("button", { name: "neon city", exact: true }).click();
+  await panel.getByRole("checkbox", { name: "CRT texture", exact: true }).uncheck();
+  await panel.getByRole("checkbox", { name: "City rain", exact: true }).uncheck();
+  await expect(page.locator(".crt-raster")).toBeHidden();
+  await expect(page.locator(".city-rain")).toBeHidden();
+  await page.keyboard.press("Escape");
+  await expect(trigger).toBeFocused();
+  await expect(panel).toBeHidden();
+  await expect(page.getByRole("log")).toContainText("coffee.exe");
+  await expect(page.getByLabel("Activity year")).toHaveValue("2024");
+  await expect(page.getByRole("tab", { name: "LeetCode", exact: true })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("button", { name: "Grid view" })).toHaveAttribute("aria-pressed", "true");
+  await page.locator("#project-internfly h3 a").click();
+  await expect(page).toHaveURL("/projects/internfly", { timeout: 15000 });
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "ember");
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
+  await expect(page.locator("html")).toHaveAttribute("data-crt", "off");
+  await trigger.click();
+  await panel.getByRole("button", { name: "reset display", exact: true }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "ion");
+  await expect(page.locator(".crt-raster")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await page.getByRole("link", { name: "Mehul Bisht home", exact: true }).click();
+  await expect(page).toHaveURL("/");
+  await trigger.click();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: `test-results/${testInfo.project.name}-display-settings.png` });
 });
