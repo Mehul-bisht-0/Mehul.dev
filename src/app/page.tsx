@@ -2,6 +2,7 @@ import ActivityMap from "@/components/ActivityMap";
 import Terminal from "@/components/Terminal";
 import WorkspaceRail from "@/components/WorkspaceRail";
 import ProjectExplorer from "@/components/ProjectExplorer";
+import DesertDrive from "@/components/DesertDrive";
 import { portfolio } from "@/config/portfolio";
 import Link from "next/link";
 
@@ -36,12 +37,7 @@ export default function Home() {
               <p className="intro-description">{portfolio.intro}</p>
               <div className="intro-links"><a href="#projects">explore projects <span aria-hidden="true">↓</span></a><a href={portfolio.social[0].href} target="_blank" rel="noreferrer">github <span aria-hidden="true">↗</span></a></div>
             </div>
-            <div className="night-scene" aria-hidden="true">
-              <span className="star star-one">+</span><span className="star star-two">·</span><span className="star star-three">✦</span><span className="star star-four">.</span><span className="star star-five">+</span>
-              <pre className="ascii-moon">{`       _..._\n     .::::. '.\n    :::::::.  :\n    :::::::   :\n    ':::::   .'\n      '::..-'`}</pre>
-              <div className="night-caption">dark theme. clear intent.<br /><span>// less noise, more signal</span></div>
-              <span className="scene-coordinate">[ 0x0B / 0x0F / 0x12 ]</span>
-            </div>
+            <DesertDrive />
           </div>
           <Terminal />
           <div className="intro-bottom"><span><span className="green">↳</span> scroll to inspect the source</span><span>human-readable · keyboard-friendly</span></div>

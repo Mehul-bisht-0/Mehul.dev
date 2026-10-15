@@ -54,6 +54,20 @@ h1 { margin: 15px 0 10px; font-size: clamp(32px, 4.5vw, 46px); line-height: 1.2;
 .intro-links a:last-child { color: var(--muted); }
 .intro-links a > span { color: var(--green); margin-left: 8px; }
 .night-scene { position: relative; padding-top: 20px; text-align: center; color: #93a698; border-left: 1px solid #1c252a; }
+.night-scene.desert-scene { min-width: 0; padding: 5px 0 0 14px; align-self: start; }
+.drive-status { display: flex; justify-content: space-between; gap: 12px; color: var(--dim); font: 12px/1 var(--pixel); letter-spacing: .5px; margin-bottom: 10px; }
+.desert-drive { display: block; width: 100%; height: auto; overflow: hidden; image-rendering: pixelated; border-block: 1px solid #233b25; }
+.desert-scene .night-caption { margin-top: 11px; font-size: 9px; }.desert-scene .scene-coordinate { margin-top: 8px; color: var(--dim); font-size: 8px; }
+.desert-far-dunes { animation: desert-pan 36s steps(128, end) infinite; }.desert-near-dunes, .desert-cacti { animation: desert-pan 18s steps(128, end) infinite; }
+.desert-road-markings { animation: desert-road .9s steps(32, end) infinite; }.desert-car { animation: desert-cruise .7s steps(1, end) infinite; }
+.desert-wheel-spokes { transform-origin: 6px 6px; animation: desert-wheels .3s steps(2, end) infinite; }.desert-dust { animation: desert-dust 1s steps(4, end) infinite; }
+@keyframes desert-pan { to { transform: translateX(-256px); } }
+@keyframes desert-road { to { transform: translateX(-64px); } }
+@keyframes desert-cruise { 0%, 65%, 100% { transform: translateY(0); } 30% { transform: translateY(-1px); } }
+@keyframes desert-wheels { to { transform: rotate(180deg); } }
+@keyframes desert-dust { from { transform: translateX(0); opacity: .6; } to { transform: translateX(-12px); opacity: 0; } }
+@media (min-width: 1100px) { .intro-grid:has(.desert-scene) { grid-template-columns: minmax(0, 1fr) 280px; } }
+@media (max-width: 560px) { .intro-grid:has(.desert-scene) { grid-template-columns: minmax(0, 1fr); }.night-scene.desert-scene { width: 100%; max-width: 360px; justify-self: center; padding: 0; margin-top: 15px; }.desert-scene .night-caption { display: block; margin-top: 10px; }.desert-scene .scene-coordinate { display: none; } }
 .ascii-moon { display: inline-block; text-align: left; font-size: 15px; line-height: 1.1; margin: 12px 0 18px; color: var(--amber); font-family: var(--mono); }
 .night-caption { font-size: 10px; color: #a4afa8; line-height: 1.9; }
 .night-caption span { color: var(--dim); }

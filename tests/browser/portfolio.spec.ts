@@ -20,6 +20,7 @@ test.beforeEach(async ({ page }) => {
 test("portfolio content, heatmap controls, touch inspection and layout", async ({ page }, testInfo) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Mehul Bisht." })).toBeVisible();
+  await expect(page.locator(".desert-drive")).toBeVisible();
   await expect(page.locator(".project-row")).toHaveCount(5);
   await expect(page.getByRole("tab", { name: "Combined" })).toHaveAttribute("aria-selected", "true");
   await expect(page.locator(".activity-status")).toContainText("synced");
@@ -39,6 +40,7 @@ test("portfolio content, heatmap controls, touch inspection and layout", async (
   await page.getByRole("tab", { name: "Combined" }).click();
   await page.locator(".project-details summary").first().click();
   await page.evaluate(() => window.scrollTo(0, 0));
+  await page.locator(".intro-grid").screenshot({ path: `test-results/${testInfo.project.name}-night-drive.png` });
   await page.screenshot({ path: `test-results/${testInfo.project.name}-portfolio.png`, fullPage: true });
 });
 
@@ -93,6 +95,7 @@ test("calendar keyboard controls and reduced motion", async ({ page }) => {
   await page.keyboard.press("ArrowRight");
   await expect(page.getByRole("tab", { name: "GitHub" })).toBeFocused();
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior)).toBe("auto");
+  expect(await page.locator(".desert-road-markings").evaluate((element) => getComputedStyle(element).animationName)).toBe("none");
 });
 
 test("partial, stale and unavailable calendars communicate missing data", async ({ page }) => {
