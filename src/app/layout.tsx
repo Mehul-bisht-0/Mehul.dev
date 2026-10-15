@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { portfolio } from "@/config/portfolio";
 import OscilloscopeBackdrop from "@/components/OscilloscopeBackdrop";
+import BackgroundAudio from "@/components/BackgroundAudio";
 import "@fontsource/vt323/latin-400.css";
 import "./globals.css";
 
@@ -11,5 +12,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: "#070e09" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body><OscilloscopeBackdrop />{children}</body></html>;
+  return <html lang="en"><body><OscilloscopeBackdrop />{children}<BackgroundAudio /></body></html>;
 }

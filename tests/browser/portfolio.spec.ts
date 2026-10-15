@@ -276,3 +276,59 @@ test("removed project routes return a useful 404", async ({ page }) => {
   await page.getByRole("link", { name: "back to projects" }).click();
   await expect(page).toHaveURL("/#projects");
 });
+
+test("background music waits for interaction when autoplay is blocked", async ({ page }) => {
+  await page.addInitScript(() => {
+    const originalPlay = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function () {
+      if (!navigator.userActivation.isActive) return Promise.reject(new DOMException("Autoplay requires interaction", "NotAllowedError"));
+      return originalPlay.call(this);
+    };
+  });
+  await page.goto("/");
+  const audio = page.locator(".background-audio audio");
+  await expect(page.getByRole("button", { name: "Play background music" })).toHaveAttribute("aria-pressed", "false");
+  await page.getByRole("button", { name: "coffee", exact: true }).click();
+  await expect.poll(() => audio.evaluate((element: HTMLAudioElement) => element.paused)).toBe(false);
+  await expect(page.getByRole("button", { name: "Pause background music" })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Pause background music" }).click();
+  await page.getByRole("button", { name: "help", exact: true }).click();
+  expect(await audio.evaluate((element: HTMLAudioElement) => element.paused)).toBe(true);
+});
+
+test("background music loops, continues between pages and remembers controls", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem("audio-test-ready")) {
+      localStorage.setItem("portfolio:audio-enabled", "off");
+      sessionStorage.setItem("audio-test-ready", "1");
+    }
+  });
+  await page.goto("/");
+  const audio = page.locator(".background-audio audio");
+  await page.getByRole("button", { name: "Play background music" }).click();
+  await expect(page.getByRole("button", { name: "Pause background music" })).toBeVisible();
+  await expect.poll(() => audio.evaluate((element: HTMLAudioElement) => element.duration)).toBeGreaterThan(1);
+  const volume = page.getByRole("slider", { name: "Background music volume" });
+  await volume.focus();
+  await volume.press("Home");
+  await volume.press("ArrowRight");
+  await volume.press("ArrowRight");
+  await expect(volume).toHaveValue("10");
+  expect(await audio.evaluate((element: HTMLAudioElement) => element.volume)).toBe(.1);
+  expect(await audio.evaluate((element: HTMLAudioElement) => element.loop)).toBe(true);
+  await audio.evaluate((element: HTMLAudioElement) => { element.currentTime = element.duration - .3; });
+  await expect.poll(() => audio.evaluate((element: HTMLAudioElement) => element.currentTime), { timeout: 10000 }).toBeLessThan(2);
+  expect(await audio.evaluate((element: HTMLAudioElement) => element.paused)).toBe(false);
+  const originalAudio = await audio.elementHandle();
+  await page.locator("#project-internfly h3 a").click();
+  await expect(page).toHaveURL("/projects/internfly", { timeout: 15000 });
+  expect(await originalAudio!.evaluate((element) => element.isConnected)).toBe(true);
+  expect(await audio.evaluate((element: HTMLAudioElement) => element.paused)).toBe(false);
+  await page.getByRole("button", { name: "Pause background music" }).click();
+  await page.reload();
+  await expect(volume).toHaveValue("10");
+  await expect(page.getByRole("button", { name: "Play background music" })).toHaveAttribute("aria-pressed", "false");
+  expect(await audio.evaluate((element: HTMLAudioElement) => element.paused)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});

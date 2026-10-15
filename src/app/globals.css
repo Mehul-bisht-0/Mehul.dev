@@ -14,7 +14,7 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 100px; }
-body { margin: 0; position: relative; isolation: isolate; background: var(--background); color: var(--text); font-family: var(--mono); font-size: 13px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+body { margin: 0; padding-bottom: 70px; position: relative; isolation: isolate; background: var(--background); color: var(--text); font-family: var(--mono); font-size: 13px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
 .analog-backdrop { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: url("/analog-bench.svg") center top / 1600px 1120px repeat; opacity: .5; }
 button, input, select { font: inherit; }
 button, select { cursor: pointer; }
@@ -301,6 +301,12 @@ h1 { font-family: var(--pixel); font-size: 52px; font-weight: 400; letter-spacin
 /* Project documents share the phosphor palette and the existing directory language. */
 .project-read-link { display: inline-flex; gap: 15px; color: var(--green); font-size: 11px; margin-top: 17px; border-bottom: 1px solid var(--border); padding-bottom: 2px; }
 .experience-profile-link { display: inline-flex; gap: 12px; font-size: 11px; color: var(--green); margin: 20px 0 0 34px; }
+.background-audio { position: fixed; bottom: 16px; right: 20px; z-index: 15; display: flex; align-items: center; gap: 15px; max-width: calc(100vw - 32px); padding: 9px 12px; background: #0b160e; border: 1px solid #486333; box-shadow: 3px 3px #030805; }
+.audio-toggle { display: inline-flex; align-items: center; gap: 9px; padding: 2px 0; border: 0; background: none; color: var(--muted); font: 18px/1 var(--pixel); white-space: nowrap; }
+.audio-toggle[aria-pressed="true"] { color: var(--green); }.audio-toggle svg { shape-rendering: crispEdges; }
+.audio-volume { display: flex; align-items: center; gap: 8px; color: var(--dim); font-size: 9px; }.audio-volume input { width: 57px; height: 16px; margin: 0; accent-color: var(--green); cursor: pointer; }.audio-volume > span:last-child { min-width: 29px; text-align: right; }
+@media (max-width: 560px) { .background-audio { bottom: 12px; right: 12px; gap: 12px; padding: 9px 10px; }.audio-toggle { font-size: 17px; } }
+@media print { .background-audio { display: none; } }
 .experience-log { background: rgb(7 14 9 / .96); padding: 6px 0; }
 .experience-log article { position: relative; border-left: 1px solid #4d6c37; padding: 0 0 35px 25px; margin-bottom: 0; }
 .experience-log article::before { content: ""; position: absolute; top: 7px; left: -4px; width: 7px; height: 7px; background: var(--green); box-shadow: 0 0 0 4px var(--background); }

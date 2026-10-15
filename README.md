@@ -41,6 +41,10 @@ The analog instrument panel is a virtual oscilloscope. Its buttons and sliders s
 
 The pixelated CRT treatment uses stepped signal samples (3 units horizontally, 2 vertically), crisp SVG edges, a repeating phosphor-dot graticule, light scanlines, and a self-hosted VT323 display font. The full-page dual traces follow the same waveform, frequency, gain, and hold state as the terminal. Both background and panel respect reduced motion. All visuals are local SVG/CSS, with no gradients, external image requests, or canvas dependencies. The earlier electrical bench SVG is retained as an unused previous design asset.
 
+## Background audio
+
+The track supplied in `audio/` is served from `public/audio/the-son-of-flynn.mp3` and loops through a persistent audio component in the root layout. Playback continues through internal project navigation. It starts at 20% volume when browser autoplay policy allows it, otherwise after the first page interaction or the sound button. The fixed sound control pauses/resumes playback and adjusts volume; both preferences are remembered locally. An explicit pause is respected across later interactions and reloads. The player loads the track only when playback is attempted.
+
 ## Workspace navigation
 
 A sticky file-explorer rail tracks the visible section on desktop. It includes public profile shortcuts, a UTC clock, elapsed browser-session time, and reading progress. On smaller screens, use the `workspace/index` disclosure above the introduction. The rail's **open terminal** button or **Ctrl/Command + backtick** expands the existing shell and focuses its input; command history is preserved.
