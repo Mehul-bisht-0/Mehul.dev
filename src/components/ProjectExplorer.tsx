@@ -2,6 +2,7 @@
 
 import { Children, useEffect, useId, useMemo, useState, type ReactNode } from "react";
 import type { Project } from "@/config/portfolio";
+import Link from "next/link";
 
 type ProjectView = "list" | "grid" | "table";
 const views: { id: ProjectView; label: string; icon: ReactNode }[] = [
@@ -65,11 +66,11 @@ export default function ProjectExplorer({ projects, children }: { projects: Proj
         <table className="project-table">
           <caption className="sr-only">Selected projects with their technical focus and technologies</caption>
           <thead><tr><th scope="col">#</th><th scope="col">project</th><th scope="col">focus</th><th scope="col">stack</th><th scope="col">source</th></tr></thead>
-          <tbody>{projects.map((project, index) => <tr key={project.slug} hidden={!visible[index]}><td className="table-index">{String(index + 1).padStart(2, "0")}</td><th scope="row"><a href={project.repository} target="_blank" rel="noreferrer">{project.name}<span aria-hidden="true"> ↗</span></a></th><td className="table-category">{project.category.toLowerCase()}</td><td className="table-stack">{project.technologies.join(" / ")}</td><td><a href={project.repository} target="_blank" rel="noreferrer" aria-label={`${project.name} repository in table view`}>git ↗</a></td></tr>)}</tbody>
+          <tbody>{projects.map((project, index) => <tr key={project.slug} hidden={!visible[index]}><td className="table-index">{String(index + 1).padStart(2, "0")}</td><th scope="row"><Link href={`/projects/${project.slug}`}>{project.name}<span aria-hidden="true"> →</span></Link></th><td className="table-category">{project.category.toLowerCase()}</td><td className="table-stack">{project.technologies.join(" / ")}</td><td><a href={project.repository} target="_blank" rel="noreferrer" aria-label={`${project.name} repository in table view`}>git ↗</a></td></tr>)}</tbody>
         </table>
       </div>
       {matches === 0 && <div className="project-no-results" role="status"><span className="amber">0 matches.</span> Even grep needs the right keywords.<button type="button" onClick={() => setQuery("")}>[ clear search ]</button></div>}
-      <div className="project-explorer-footer"><span>{view === "table" ? "repository index" : view === "grid" ? "a closer look at the work" : "selected repositories"}</span><span>read the docs, inspect the details <span className="green" aria-hidden="true">↗</span></span></div>
+      <div className="project-explorer-footer"><span>{view === "table" ? "repository index" : view === "grid" ? "a closer look at the work" : "selected repositories"}</span><span>open a project to read its story <span className="green" aria-hidden="true">→</span></span></div>
     </div>
   );
 }

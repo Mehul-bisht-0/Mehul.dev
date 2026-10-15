@@ -3,6 +3,7 @@ import Terminal from "@/components/Terminal";
 import WorkspaceRail from "@/components/WorkspaceRail";
 import ProjectExplorer from "@/components/ProjectExplorer";
 import { portfolio } from "@/config/portfolio";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -60,9 +61,10 @@ export default function Home() {
                 <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
                 <div className="project-content">
                   <span className="project-category">{project.category}</span>
-                  <h3><a href={project.repository} target="_blank" rel="noreferrer">{project.name} <span className="project-arrow" aria-hidden="true">↗</span></a></h3>
+                  <h3><Link href={`/projects/${project.slug}`}>{project.name} <span className="project-arrow" aria-hidden="true">→</span></Link></h3>
                   <p>{project.description}</p>
                   <div className="project-technologies" aria-label="Technologies">{project.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div>
+                  <Link className="project-read-link" href={`/projects/${project.slug}`}>read project <span aria-hidden="true">→</span></Link>
                   <details className="project-details"><summary>inspect details <span aria-hidden="true">+</span></summary><ul>{project.details.map((detail) => <li key={detail}>{detail}</li>)}</ul><a className="detail-source" href={`${project.repository}#readme`} target="_blank" rel="noreferrer">read the source documentation ↗</a></details>
                 </div>
                 <a className="repo-link" href={project.repository} target="_blank" rel="noreferrer" aria-label={`${project.name} repository`}>[ source ↗ ]</a>
@@ -74,7 +76,18 @@ export default function Home() {
 
         <section id="experience" tabIndex={-1} className="portfolio-section" aria-labelledby="experience-title">
           <div id="experience-title"><SectionHeading number="03" command="cat experience.log" note="the work behind the commits" /></div>
-          {portfolio.experience.draft ? <div className="draft-experience"><span className="log-marker" aria-hidden="true">└─</span><div><span className="draft-label">EDITABLE DRAFT</span><h3>{portfolio.experience.title}</h3><p>{portfolio.experience.description}</p><code>// TODO: roles · organizations · dates · impact</code></div></div> : <div className="experience-log">{portfolio.experience.entries.map((entry) => <article key={`${entry.role}-${entry.organization}`}><span className="experience-date">{entry.dates}</span><h3>{entry.role}</h3><p className="green">{entry.organization}</p><p>{entry.description}</p></article>)}</div>}
+          {portfolio.experience.draft ? <div className="draft-experience"><span className="log-marker" aria-hidden="true">└─</span><div><span className="draft-label">EDITABLE DRAFT</span><h3>{portfolio.experience.title}</h3><p>{portfolio.experience.description}</p><code>// TODO: roles · organizations · dates · impact</code></div></div> : <div className="experience-log">{portfolio.experience.entries.map((entry, index) => (
+            <article key={`${entry.role}-${entry.organization}`} aria-label={`${entry.role} at ${entry.organization}`}>
+              <div className="experience-entry-header"><span className="experience-date">{entry.dates}</span><span className="experience-entry-number" aria-hidden="true">[{String(index + 1).padStart(2, "0")}]</span></div>
+              <h3>{entry.role}</h3>
+              <div className="experience-organization"><span className="green">{entry.organization}</span><span>{entry.engagement}</span></div>
+              {entry.location && <p className="experience-location">{entry.location}</p>}
+              {entry.description && <p className="experience-description">{entry.description}</p>}
+              {entry.highlights && <ul className="experience-highlights">{entry.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>}
+              {entry.technologies && <div className="project-technologies" aria-label="Technologies">{entry.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div>}
+            </article>
+          ))}</div>}
+          <a className="experience-profile-link" href={portfolio.linkedin} target="_blank" rel="noreferrer">view LinkedIn profile <span aria-hidden="true">↗</span></a>
         </section>
 
         <section id="about" tabIndex={-1} className="portfolio-section about-section" aria-labelledby="about-title">

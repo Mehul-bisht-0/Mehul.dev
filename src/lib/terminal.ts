@@ -30,7 +30,14 @@ export function runCommand(input: string, expanded: boolean, context: ShellConte
     case "help": return { text: "NAVIGATE\nwhoami / projects / experience / activity / about\nls [projects/]    browse the virtual filesystem\ncd projects      change directory (cd .. to return)\npwd              print the current directory\ncat about.txt    read a portfolio file\nopen <slug>      inspect a project\n\nINSTRUMENTS\nscope            show current signal settings\nsignal <wave>    sine / square / triangle\ntune <1–8>       set oscillator frequency (Hz)\ngain <1–5>       set signal amplitude\nhold / resume    freeze or release the trace\n\nSESSION\nhistory / clear / coffee\n\n↑/↓ history · Tab completion · Ctrl+C cancel · Esc collapse\nThis portfolio shell executes no system commands." };
     case "whoami": return { text: `${portfolio.name}\n${portfolio.headline}${expanded ? `\n\n${portfolio.intro}\nGitHub: ${portfolio.github}\nLeetCode: ${portfolio.leetcode}` : ""}`, section: "home" };
     case "projects": return { text: expanded ? portfolio.projects.map((project, index) => `${String(index + 1).padStart(2, "0")}  ${project.name}\n    ${project.description}\n    [${project.technologies.join(" / ")}]\n    ${project.repository}`).join("\n\n") : `${portfolio.projects.length} projects found. Opening projects/ …`, section: "projects" };
-    case "experience": return { text: portfolio.experience.draft ? `[EDITABLE DRAFT]\n${portfolio.experience.title}${expanded ? `\n${portfolio.experience.description}` : ""}` : portfolio.experience.entries.map((entry) => `${entry.role} · ${entry.organization}\n${entry.dates}\n${entry.description}`).join("\n\n"), section: "experience" };
+    case "experience": return { text: portfolio.experience.draft ? `[EDITABLE DRAFT]\n${portfolio.experience.title}${expanded ? `\n${portfolio.experience.description}` : ""}` : expanded ? portfolio.experience.entries.map((entry) => [
+      `${entry.role} · ${entry.organization}`,
+      `${entry.dates} · ${entry.engagement}`,
+      entry.location,
+      entry.description,
+      ...(entry.highlights?.map((highlight) => `→ ${highlight}`) ?? []),
+      entry.technologies?.join(" / "),
+    ].filter(Boolean).join("\n")).join("\n\n") : `${portfolio.experience.entries.length} entries found. Opening experience.log …`, section: "experience" };
     case "about": return { text: `${portfolio.about.draft ? "[EDITABLE DRAFT]\n" : ""}${portfolio.about.title}${expanded ? `\n\n${portfolio.about.paragraphs.join("\n\n")}` : ""}`, section: "about" };
     case "activity": return { text: `GitHub (${portfolio.github}) + LeetCode (${portfolio.leetcode}).${expanded ? "\nOne calendar. Three views.\nCombined = contributions + submissions, not unique problems solved.\nUse the activity section below for live counts and year controls." : "\nOpening activity/ …"}`, section: "activity" };
     case "ls": {
@@ -38,7 +45,7 @@ export function runCommand(input: string, expanded: boolean, context: ShellConte
       const showProjects = directory === "projects" || directory === "/projects" || ["", ".", "./"].includes(argument) && cwd === "/projects";
       if (showProjects) return { text: portfolio.projects.map((project) => `${project.slug.padEnd(20)} ${project.technologies.slice(0, 2).join(" / ")}`).join("\n") + "\n\nInspect one: open " + portfolio.projects[0].slug };
       if (!["", ".", "./", "/", ".."].includes(argument)) return fail(`ls: ${argument}: no such directory`);
-      return { text: "projects/        selected repositories\nactivity.map     GitHub + LeetCode\nexperience.log   experience draft\nabout.txt        the human README\n\nTry: cd projects · cat about.txt" };
+      return { text: `projects/        selected repositories\nactivity.map     GitHub + LeetCode\nexperience.log   ${portfolio.experience.draft ? "experience draft" : "roles and project work"}\nabout.txt        the human README\n\nTry: cd projects · cat about.txt` };
     }
     case "pwd": return { text: `~/portfolio${cwd === "/projects" ? "/projects" : ""}` };
     case "cd": {

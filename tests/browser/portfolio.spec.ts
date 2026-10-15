@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { datesInYear, mergeActivity, type SourceResult } from "../../src/lib/activity";
+import { portfolio } from "../../src/config/portfolio";
 
 const year = new Date().getUTCFullYear();
 function fixture(selectedYear = year, ghStatus: SourceResult["status"] = "live", lcStatus: SourceResult["status"] = "live") {
@@ -62,9 +63,9 @@ test("terminal completion, history, navigation, expansion, clear and safe unknow
   await page.getByRole("button", { name: "expand shell" }).click();
   await input.fill("projects");
   await input.press("Enter");
-  await expect(page.getByRole("log")).toContainText("Video-to-ASCII");
+  await expect(page.getByRole("log")).toContainText("InternFly");
   await page.getByRole("button", { name: "collapse" }).click();
-  await expect(page.getByRole("log")).toContainText("Video-to-ASCII");
+  await expect(page.getByRole("log")).toContainText("InternFly");
   await input.fill("<script>alert(1)</script>");
   await input.press("Enter");
   await expect(page.getByRole("log")).toContainText("command not found:");
@@ -73,6 +74,9 @@ test("terminal completion, history, navigation, expansion, clear and safe unknow
   await expect(page.locator(".terminal-entry")).toHaveCount(0);
   await page.getByRole("button", { name: "experience", exact: true }).click();
   await expect(page.locator("#experience")).toBeFocused();
+  await expect(page.locator("#experience .draft-experience")).toHaveCount(0);
+  await expect(page.getByRole("article", { name: "Intern at Phemesoft", exact: true })).toContainText("Jun 2026 – Aug 2026");
+  await expect(page.getByRole("article", { name: "Independent Third Party Strategic Planner at Clash Royale", exact: true })).toContainText("Gaming");
 });
 
 test("calendar keyboard controls and reduced motion", async ({ page }) => {
@@ -233,4 +237,42 @@ test("compact open command reveals a project even after filtering", async ({ pag
   await expect(page.getByRole("button", { name: "List view" })).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator("#project-aco-its details")).toHaveAttribute("open", "");
   await expect(page.locator("#project-aco-its summary")).toBeFocused();
+});
+
+test("every project has an on-site explanation and directory navigation", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.locator("#experience").getByRole("link", { name: "view LinkedIn profile" })).toHaveAttribute("href", portfolio.linkedin);
+  await page.getByRole("button", { name: "Table view" }).click();
+  const firstProject = portfolio.projects[0];
+  const firstLink = page.getByRole("table").getByRole("link", { name: firstProject.name, exact: true });
+  await expect(firstLink).not.toHaveAttribute("target", "_blank");
+  await firstLink.click();
+  for (const project of portfolio.projects) {
+    await page.getByRole("navigation", { name: "Project directory" }).getByRole("link", { name: project.name, exact: true }).click();
+    await expect(page).toHaveURL(`/projects/${project.slug}`);
+    await expect(page).toHaveTitle(`${project.name} | Mehul Bisht`);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(`${project.name}_`);
+    await expect(page.getByRole("heading", { name: "What does it do?" })).toBeVisible();
+    await expect(page.locator(".project-example")).toContainText(project.story.example.output);
+    await expect(page.locator(".project-flow li")).toHaveCount(4);
+    await expect(page.locator(".project-boundaries")).toContainText(project.story.limitations[0]);
+    await expect(page.getByRole("link", { name: "source code" })).toHaveAttribute("href", project.repository);
+    await expect(page.getByRole("navigation", { name: "Project directory" }).getByRole("link", { name: project.name, exact: true })).toHaveAttribute("aria-current", "page");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+  await page.getByRole("navigation", { name: "Continue exploring" }).getByRole("link", { name: /all projects/ }).click();
+  await expect(page).toHaveURL("/#projects");
+  await expect(page.getByRole("heading", { name: "ls projects/" })).toBeVisible();
+  await page.goto("/projects/reliable-queue");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Dead-letter Recovery");
+  await expect(page.locator("#boundaries")).toContainText("at least once");
+});
+
+test("removed project routes return a useful 404", async ({ page }) => {
+  const response = await page.goto("/projects/video-to-ascii");
+  expect(response?.status()).toBe(404);
+  await expect(page.getByRole("heading", { name: "File not found_" })).toBeVisible();
+  await page.getByRole("link", { name: "back to projects" }).click();
+  await expect(page).toHaveURL("/#projects");
 });

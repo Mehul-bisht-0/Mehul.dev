@@ -15,7 +15,11 @@ Open http://127.0.0.1:3000. Production: `npm run build`, then `npm start`. Deplo
 
 ## Edit the content
 
-All personal copy, social links, usernames, and project metadata live in `src/config/portfolio.ts`. Experience and About are visibly labeled drafts. Populate the experience entries and set `draft: false` when ready; replace the About paragraphs and disable its draft label. Add only verified roles, dates, achievements, and interests. Project descriptions are based on their public READMEs and linked to the source documentation.
+All personal copy, social links, usernames, and project metadata live in `src/config/portfolio.ts`. Experience contains the six entries from the supplied LinkedIn profile, with roles, dates, engagement types, locations where listed, and concise descriptions. The Clash Royale entry is explicitly labeled gaming. Roles without a LinkedIn description show only the available facts. About remains a visibly labeled draft; replace its paragraphs and disable its draft label when ready. Add only verified roles, dates, achievements, and interests. Project descriptions are based on their public READMEs and linked to the source documentation.
+
+The supplied LinkedIn profile is included in the social links and Experience section. Experience was read through the signed-in profile on 15 October 2026. The terminal's `experience` and `cat experience.log` commands use the same entries as the page.
+
+Each featured project has a server-rendered page at `/projects/<slug>`: `aco-its`, `driftbench`, `filinglens`, `reliable-queue`, and `internfly`. Project names in all three explorer views open these pages. Each page explains the purpose, a concrete example, the system flow, engineering decisions, and limitations, with a project directory and next-project navigation. The `story` field in the same typed configuration owns this content. GitHub remains available through explicit source links. Unknown and removed slugs return a 404. The job queue description reflects its documented V2 PostgreSQL/outbox/lease architecture and at-least-once execution. InternFly replaces Video-to-ASCII and describes the optional selected Male CNS v1.0 connectivity, engineered controller dynamics, offline fixture, and fictional internship simulation.
 
 ## Activity calendar
 

@@ -8,10 +8,15 @@ test("all commands produce output or clear; section navigation is explicit", () 
   assert.equal(runCommand("whoami", false).section, "home");
   assert.equal(runCommand("clear", true).clear, true);
 });
-test("expanded output contains full project information and visibly marked drafts", () => {
+test("expanded output contains project information, real experience, and the About draft", () => {
   assert.match(runCommand("projects", true).text, /https:\/\/github.com/);
-  assert.match(runCommand("projects", true).text, /Video-to-ASCII/);
-  assert.match(runCommand("experience", true).text, /EDITABLE DRAFT/);
+  assert.match(runCommand("projects", true).text, /InternFly/);
+  assert.doesNotMatch(runCommand("projects", true).text, /Video-to-ASCII/);
+  assert.match(runCommand("experience", true).text, /Phemesoft/);
+  assert.match(runCommand("experience", true).text, /Pinnacle Labs/);
+  assert.doesNotMatch(runCommand("experience", true).text, /EDITABLE DRAFT|undefined/);
+  assert.match(runCommand("experience", false).text, /Opening experience.log/);
+  assert.equal(runCommand("cat experience.log", false).text, runCommand("experience", true).text);
   assert.match(runCommand("about", true).text, /EDITABLE DRAFT/);
 });
 test("completion returns matching commands without executing input", () => {
